@@ -1,15 +1,15 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef PRJWINDOW_H
+#define PRJWINDOW_H
 
 #include <QMainWindow>
 
-class MainWindow : public QMainWindow
+class PrjWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    PrjWindow(QWidget *parent = 0);
+    ~PrjWindow();
 };
 
-#endif // MAINWINDOW_H
+#endif // PRJWINDOW_H

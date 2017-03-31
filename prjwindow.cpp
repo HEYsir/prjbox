@@ -1,11 +1,11 @@
-#include "mainwindow.h"
+#include "prjwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
+PrjWindow::PrjWindow(QWidget *parent)
     : QMainWindow(parent)
 {
 }
 
-MainWindow::~MainWindow()
+PrjWindow::~PrjWindow()
 {
 
 }
