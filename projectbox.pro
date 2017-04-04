@@ -33,4 +33,5 @@ HEADERS  += \
     initdb.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    prjwindow.ui

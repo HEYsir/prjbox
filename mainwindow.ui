@@ -14,13 +14,13 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>个人开发项目管理器</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>270</x>
+      <x>300</x>
       <y>10</y>
       <width>271</width>
       <height>41</height>
@@ -78,7 +78,7 @@
    <widget class="QLineEdit" name="lineEdit">
     <property name="geometry">
      <rect>
-      <x>740</x>
+      <x>100</x>
       <y>50</y>
       <width>121</width>
       <height>22</height>
@@ -86,9 +86,12 @@
     </property>
    </widget>
    <widget class="QComboBox" name="comboBox">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>654</x>
+      <x>14</x>
       <y>50</y>
       <width>82</width>
       <height>22</height>
@@ -98,7 +101,7 @@
      <bool>false</bool>
     </property>
     <property name="editable">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="currentText">
      <string>主题</string>
@@ -129,6 +132,19 @@
       <string>型号/平台</string>
      </property>
     </item>
+   </widget>
+   <widget class="QPushButton" name="addprj">
+    <property name="geometry">
+     <rect>
+      <x>749</x>
+      <y>50</y>
+      <width>101</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>新增项目</string>
+    </property>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

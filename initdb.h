@@ -52,7 +52,7 @@
 #define INITDB_H
 
 #include <QtSql>
-
+#if 0
 void addPrj(QSqlQuery &q, const QString &title, int year, const QVariant &authorId,
              const QVariant &genreId, int rating)
 {
@@ -144,6 +144,7 @@ QSqlError initDb()
     addBook(q, QLatin1String("Going Postal"), 2004, pratchettId, fantasy, 3);
 
     return QSqlError();
-}
 
+}
+#endif
 #endif // INITDB_H

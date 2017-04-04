@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "ui_prjwindow.h"
+
 class PrjWindow : public QMainWindow
 {
     Q_OBJECT
@@ -10,6 +12,9 @@ class PrjWindow : public QMainWindow
 public:
     PrjWindow(QWidget *parent = 0);
     ~PrjWindow();
+
+private:
+    prjUi::PrjWindow prjui;
 };
 
 #endif // PRJWINDOW_H

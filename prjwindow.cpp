@@ -3,6 +3,7 @@
 PrjWindow::PrjWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    prjui.setupUi(this);
 }
 
 PrjWindow::~PrjWindow()

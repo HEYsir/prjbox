@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui.setupUi(this);
 
+    connect(ui.addprj, SIGNAL(clicked()), this, SLOT(addprj_clicked()));
+#if 0
     if (!QSqlDatabase::drivers().contains("QSQLITE"))
         QMessageBox::critical(this, "Unable to load database", "This demo needs the SQLITE driver");
 
@@ -68,9 +70,15 @@ MainWindow::MainWindow(QWidget *parent)
             mapper, SLOT(setCurrentModelIndex(QModelIndex)));
 
     ui.bookTable->setCurrentIndex(model->index(0, 0));
+#endif
 }
 
 MainWindow::~MainWindow()
 {
 
+}
+
+void MainWindow::addprj_clicked()
+{
+    this->prj.show();
 }
