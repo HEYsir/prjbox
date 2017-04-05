@@ -14,7 +14,7 @@ public:
     ~PrjWindow();
 
 private:
-    prjUi::PrjWindow prjui;
+    Ui::PrjWindow prjui;
 };
 
 #endif // PRJWINDOW_H
