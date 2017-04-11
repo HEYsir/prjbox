@@ -25,13 +25,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp \
     prjwindow.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    prjdelegate.cpp
 
 HEADERS  += \
     prjwindow.h \
     mainwindow.h \
-    initdb.h
+    initdb.h \
+    prjdelegate.h
 
 FORMS += \
     mainwindow.ui \
     prjwindow.ui
+
+DISTFILES +=
+
+RESOURCES += \
+    projectbox.qrc
