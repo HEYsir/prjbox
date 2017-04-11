@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QtWidgets>
 #include <QMainWindow>
 #include <QtSql>
 
@@ -20,6 +21,7 @@ private slots:
     void addprj_clicked();
 
 private:
+    void showError(const QSqlError &err);
     Ui::MainWindow ui;
     QSqlRelationalTableModel *model;
 };
