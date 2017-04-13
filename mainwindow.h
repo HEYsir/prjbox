@@ -20,10 +20,14 @@ public:
 private slots:
     void addprj_clicked();
 
+    void on_prjtable_clicked(const QModelIndex &index);
+
+    void on_prjtable_doubleClicked(const QModelIndex &index);
+
 private:
     void showError(const QSqlError &err);
-    Ui::MainWindow ui;
     QSqlRelationalTableModel *model;
+    Ui::MainWindow ui;
 };
 
 

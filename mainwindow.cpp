@@ -35,16 +35,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Set the localized header captions
     model->setHeaderData(model->fieldIndex("no"), Qt::Horizontal, tr("定制单号"));
-    model->setHeaderData(model->fieldIndex("con"), Qt::Horizontal, tr("需求"));
-    model->setHeaderData(model->fieldIndex("code"), Qt::Horizontal, tr("定制源码"));
-    model->setHeaderData(model->fieldIndex("prj"), Qt::Horizontal, tr("定制项目SVN"));
     model->setHeaderData(model->fieldIndex("dev"), Qt::Horizontal, tr("设备型号"));
-    model->setHeaderData(model->fieldIndex("oa"), Qt::Horizontal, tr("定制OA链接"));
-    model->setHeaderData(model->fieldIndex("refcode"), Qt::Horizontal, tr("参考源码"));
-    model->setHeaderData(model->fieldIndex("refprj"), Qt::Horizontal, tr("参考项目SVN"));
-    model->setHeaderData(model->fieldIndex("inheritcode"), Qt::Horizontal, tr("继承源码"));
-    model->setHeaderData(model->fieldIndex("inheritprj"), Qt::Horizontal, tr("继承项目SVN"));
-    model->setHeaderData(model->fieldIndex("rating"), Qt::Horizontal, tr("价值度"));
+    model->setHeaderData(model->fieldIndex("time"), Qt::Horizontal, tr("开发时间"));
 
     // Populate the model
     if (!model->select()) {
@@ -52,11 +44,14 @@ MainWindow::MainWindow(QWidget *parent)
         return;
     }
 
+    model->removeColumns(4,8);
     // Set the model and hide the ID column
     ui.prjtable->setModel(model);
-    ui.prjtable->setItemDelegate(new PrjDelegate(ui.prjtable));
+    //ui.prjtable->setItemDelegate(new PrjDelegate(ui.prjtable));
     ui.prjtable->setColumnHidden(model->fieldIndex("id"), true);
     ui.prjtable->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui.prjtable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui.prjtable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     // Initialize the Author combo box
     //ui.authorEdit->setModel(model->relationModel(authorIdx));
@@ -64,19 +59,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //ui.genreEdit->setModel(model->relationModel(genreIdx));
     //ui.genreEdit->setModelColumn(model->relationModel(genreIdx)->fieldIndex("name"));
-#if 0
-    QDataWidgetMapper *mapper = new QDataWidgetMapper(this);
-    mapper->setModel(model);
-    mapper->setItemDelegate(new BookDelegate(this));
-    mapper->addMapping(ui.titleEdit, model->fieldIndex("title"));
-    mapper->addMapping(ui.yearEdit, model->fieldIndex("year"));
-    mapper->addMapping(ui.authorEdit, authorIdx);
-    mapper->addMapping(ui.genreEdit, genreIdx);
-    mapper->addMapping(ui.ratingEdit, model->fieldIndex("rating"));
 
-    connect(ui.prjtable->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
-            mapper, SLOT(setCurrentModelIndex(QModelIndex)));
-#endif
     ui.prjtable->setCurrentIndex(model->index(0, 0));
 }
 
@@ -94,4 +77,15 @@ void MainWindow::showError(const QSqlError &err)
 void MainWindow::addprj_clicked()
 {
     this->prj.show();
+}
+
+void MainWindow::on_prjtable_clicked(const QModelIndex &index)
+{
+
+}
+
+
+void MainWindow::on_prjtable_doubleClicked(const QModelIndex &index)
+{
+    prj.showPrjInfo(index, model);
 }

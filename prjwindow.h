@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "ui_prjwindow.h"
+#include <QtSql>
 
 class PrjWindow : public QMainWindow
 {
@@ -11,6 +12,7 @@ class PrjWindow : public QMainWindow
 
 public:
     PrjWindow(QWidget *parent = 0);
+    void showPrjInfo(const QModelIndex &index, QSqlRelationalTableModel *model);
     ~PrjWindow();
 
 private:

@@ -54,20 +54,20 @@
 #include <QtSql>
 #include <QVariant>
 
-void addPrj(QSqlQuery &q, const QString &no, const QString &con, const QString &code, const QString &prj, const QString &dev, const QString &oa,
-                const QString &refcode, const QString &refprj, const QString &inheritcode, const QString &inheritprj, int rating)
+void addPrj(QSqlQuery &q, const QString &time, const QString &no,  const QString &dev, const QString &con, const QString &code, const QString &prj, const QString &oa,
+                const QString &refcode, const QString &refprj, const QString &inheritcode, const QString &inheritprj)
 {
+    q.addBindValue(time);
     q.addBindValue(no);
+    q.addBindValue(dev);
     q.addBindValue(con);
     q.addBindValue(code);
     q.addBindValue(prj);
-    q.addBindValue(dev);
     q.addBindValue(oa);
     q.addBindValue(refcode);
     q.addBindValue(refprj);
     q.addBindValue(inheritcode);
     q.addBindValue(inheritprj);
-    q.addBindValue(rating);
     q.exec();
 }
 
@@ -93,13 +93,13 @@ QSqlError initDb()
        return QSqlError();
 
     QSqlQuery q;
-    if (!q.exec(QLatin1String("create table prjinfo(id integer primary key, no varchar, con varchar, code varchar, prj varchar, dev varchar, oa varchar,"
-                              "refcode varchar, refprj varchar, inheritcode varchar, inheritprj varchar, rating integer)")))
+    if (!q.exec(QLatin1String("create table prjinfo(id integer primary key, time varchar, no varchar, dev varchar, con varchar, code varchar, prj varchar, oa varchar,"
+                              "refcode varchar, refprj varchar, inheritcode varchar, inheritprj varchar)")))
         return q.lastError();
 
-    if (!q.prepare(QLatin1String("insert into prjinfo(no, con, code, prj, dev, oa, refcode, refprj, inheritcode, inheritprj, rating) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")))
+    if (!q.prepare(QLatin1String("insert into prjinfo(time, no, dev, con, code, prj, oa, refcode, refprj, inheritcode, inheritprj) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")))
         return q.lastError();
-    addPrj(q, QLatin1String("DZ1001"), QLatin1String("数据库创建测试"), QLatin1String("svn:\\bbb"), QLatin1String("svn:\\aaa"), "", "", "", "", "", "", 3);
+    addPrj(q,  "20171011", QLatin1String("DZ1001"), QLatin1String("DS8008HW-ST"), QLatin1String("这个是测试需求"), QLatin1String("svn:\\bbb"), QLatin1String("svn:\\aaa"), "", "", "", "", "");
 
     return QSqlError();
 

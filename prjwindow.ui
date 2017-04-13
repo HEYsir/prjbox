@@ -26,7 +26,7 @@
     <string>（项目）定制单号</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_2">
+  <widget class="QLineEdit" name="dev">
    <property name="geometry">
     <rect>
      <x>560</x>
@@ -49,7 +49,7 @@
     <string> OA项目URL</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_3">
+  <widget class="QLineEdit" name="oa">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -59,7 +59,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_4">
+  <widget class="QLineEdit" name="code">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -95,7 +95,7 @@
     <string>      项目SVN</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_5">
+  <widget class="QLineEdit" name="prj">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -131,7 +131,7 @@
     <string>参考项目SVN</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_6">
+  <widget class="QLineEdit" name="refprj">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -141,7 +141,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_7">
+  <widget class="QLineEdit" name="refcode">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -164,7 +164,7 @@
     <string>定制项目SVN</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_8">
+  <widget class="QLineEdit" name="inheritprj">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -174,7 +174,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_9">
+  <widget class="QLineEdit" name="inheritcode">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -197,7 +197,7 @@
     <string>定制源码SVN</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textEdit">
+  <widget class="QTextEdit" name="con">
    <property name="geometry">
     <rect>
      <x>30</x>
@@ -227,7 +227,7 @@ p, li { white-space: pre-wrap; }
     <string>保存</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit">
+  <widget class="QLineEdit" name="no">
    <property name="geometry">
     <rect>
      <x>120</x>
