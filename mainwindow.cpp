@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "prjwindow.h"
 #include "prjdelegate.h"
 #include <QtSql>
 
@@ -65,15 +66,27 @@ MainWindow::MainWindow(QWidget *parent)
         return;
     }
 
-    model->removeColumns(4,8);
+   // model->removeColumns(4,8);
     // Set the model and hide the ID column
     ui.prjtable->setModel(model);
+
     //ui.prjtable->setItemDelegate(new PrjDelegate(ui.prjtable));
     ui.prjtable->setColumnHidden(model->fieldIndex("id"), true);
+    ui.prjtable->setColumnHidden(model->fieldIndex("con"), true);
+    ui.prjtable->setColumnHidden(model->fieldIndex("code"), true);
+    ui.prjtable->setColumnHidden(model->fieldIndex("prj"), true);
+    ui.prjtable->setColumnHidden(model->fieldIndex("oa"), true);
+    ui.prjtable->setColumnHidden(model->fieldIndex("refcode"), true);
+    ui.prjtable->setColumnHidden(model->fieldIndex("refprj"), true);
+    ui.prjtable->setColumnHidden(model->fieldIndex("inheritcode"), true);
+    ui.prjtable->setColumnHidden(model->fieldIndex("inheritprj"), true);
+
     ui.prjtable->setSelectionMode(QAbstractItemView::SingleSelection);
     ui.prjtable->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui.prjtable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
+    //ui.prjtable->horizontalHeader()->setStretchLastSection(true); //最后一个填充最后的空白位
+    //ui.prjtable->horizontalHeader()->
     // Initialize the Author combo box
     //ui.authorEdit->setModel(model->relationModel(authorIdx));
     //ui.authorEdit->setModelColumn(model->relationModel(authorIdx)->fieldIndex("name"));
@@ -106,18 +119,19 @@ void MainWindow::showError(const QSqlError &err)
 
 void MainWindow::addprj_clicked()
 {
-    QDialog *addprj = new PrjWindow(this);
+    PrjWindow *addprj = new PrjWindow(this);
     //addprj->setPrjWinTitle("新增项目开发记录");
 
     addprj->show();
 
     connect(addprj, SIGNAL(refreshPrjList()), this, SLOT(refresh_prj_list()));
-
 }
 
 
 void MainWindow::on_prjtable_doubleClicked(const QModelIndex &index)
 {
-    prj.setPrjWinTitle("定制项目详细信息");
-    prj.showPrjInfo(index, model);
+    PrjWindow *prj = new PrjWindow(this);
+
+    prj->setPrjWinTitle("定制项目详细信息");
+    prj->showPrjInfo(index, model);
 }

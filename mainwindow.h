@@ -6,7 +6,6 @@
 #include <QtSql>
 
 #include "ui_mainwindow.h"
-#include "prjwindow.h"
 
 class MainWindow : public QMainWindow
 {
@@ -14,7 +13,6 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = 0);
-    PrjWindow prj;
     ~MainWindow();
 
 private slots:
