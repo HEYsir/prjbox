@@ -1,7 +1,28 @@
 #include "mainwindow.h"
 #include "prjdelegate.h"
-#include "initdb.h"
 #include <QtSql>
+
+QSqlError initDb()
+{
+    QString dbFileName = "localprj.db";
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName(dbFileName);
+
+    if (!db.open())
+        return db.lastError();
+
+    QStringList tables = db.tables();
+    if (tables.contains("prjinfo", Qt::CaseInsensitive))
+       return QSqlError();
+
+    QSqlQuery q;
+    if (!q.exec(QLatin1String("create table prjinfo(id integer primary key, time varchar, no varchar, dev varchar, con varchar, code varchar, prj varchar, oa varchar,"
+                              "refcode varchar, refprj varchar, inheritcode varchar, inheritprj varchar)")))
+        return q.lastError();
+
+    return QSqlError();
+
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -68,6 +89,15 @@ MainWindow::~MainWindow()
 
 }
 
+void MainWindow::refresh_prj_list()
+{
+    // Populate the model
+    if (!model->select()) {
+        showError(model->lastError());
+        return;
+    }
+}
+
 void MainWindow::showError(const QSqlError &err)
 {
     QMessageBox::critical(this, "Unable to initialize Database",
@@ -76,16 +106,18 @@ void MainWindow::showError(const QSqlError &err)
 
 void MainWindow::addprj_clicked()
 {
-    this->prj.show();
-}
+    QDialog *addprj = new PrjWindow(this);
+    //addprj->setPrjWinTitle("新增项目开发记录");
 
-void MainWindow::on_prjtable_clicked(const QModelIndex &index)
-{
+    addprj->show();
+
+    connect(addprj, SIGNAL(refreshPrjList()), this, SLOT(refresh_prj_list()));
 
 }
 
 
 void MainWindow::on_prjtable_doubleClicked(const QModelIndex &index)
 {
+    prj.setPrjWinTitle("定制项目详细信息");
     prj.showPrjInfo(index, model);
 }

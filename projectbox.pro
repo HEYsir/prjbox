@@ -31,7 +31,6 @@ SOURCES += main.cpp \
 HEADERS  += \
     prjwindow.h \
     mainwindow.h \
-    initdb.h \
     prjdelegate.h
 
 FORMS += \

@@ -18,9 +18,9 @@ public:
     ~MainWindow();
 
 private slots:
-    void addprj_clicked();
+    void refresh_prj_list();
 
-    void on_prjtable_clicked(const QModelIndex &index);
+    void addprj_clicked();
 
     void on_prjtable_doubleClicked(const QModelIndex &index);
 
