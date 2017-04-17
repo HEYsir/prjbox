@@ -143,3 +143,10 @@ void PrjWindow::on_prjsave_clicked()
         this->destroy();
     }
 }
+
+void PrjWindow::closeEvent(QCloseEvent *event)
+{
+    emit revertModel(); // 告诉主窗口子窗口关闭，如果model有未提交修改，则全部撤销
+
+    event->accept();  //接受退出信号，程序退出
+}

@@ -1,6 +1,7 @@
 #ifndef PRJWINDOW_H
 #define PRJWINDOW_H
 
+#include <QCloseEvent>
 #include <QDialog>
 #include "ui_prjwindow.h"
 #include <QVariant>
@@ -18,9 +19,13 @@ public:
 
 signals:
     void refreshPrjList();
+    void revertModel();
 
 private slots:
     void on_prjsave_clicked();
+
+protected:
+    void closeEvent(QCloseEvent *event);
 
 private:
     Ui::PrjWindow prjui;

@@ -109,6 +109,17 @@ void MainWindow::refresh_prj_list()
     }
 }
 
+void MainWindow::revertModelAll()
+{
+    // Revert the model
+    model->revertAll();
+    // Populate the model
+    if (!model->select()) {
+        showError(model->lastError());
+        return;
+    }
+}
+
 void MainWindow::showError(const QSqlError &err)
 {
     QMessageBox::critical(this, "Unable to initialize Database",
@@ -132,4 +143,8 @@ void MainWindow::on_prjtable_doubleClicked(const QModelIndex &index)
 
     prj->setPrjWinTitle("定制项目详细信息");
     prj->showPrjInfo(index, model);
+
+    connect(prj, SIGNAL(revertModel()), this, SLOT(revertModelAll()));
+
+    connect(prj, SIGNAL(refreshPrjList()), this, SLOT(refresh_prj_list()));
 }

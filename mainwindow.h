@@ -17,7 +17,7 @@ public:
 
 private slots:
     void refresh_prj_list();
-
+    void revertModelAll();
     void addprj_clicked();
 
     void on_prjtable_doubleClicked(const QModelIndex &index);
