@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent)
     //model->setRelation(genreIdx, QSqlRelation("genres", "id", "name"));
 
     // Set the localized header captions
-    model->setHeaderData(model->fieldIndex("no"), Qt::Horizontal, tr("定制单号"));
+    model->setHeaderData(model->fieldIndex("no"), Qt::Horizontal, tr("定制单号与主题"));
     model->setHeaderData(model->fieldIndex("dev"), Qt::Horizontal, tr("设备型号"));
     model->setHeaderData(model->fieldIndex("time"), Qt::Horizontal, tr("开发时间"));
 
@@ -66,9 +66,15 @@ MainWindow::MainWindow(QWidget *parent)
         return;
     }
 
-   // model->removeColumns(4,8);
     // Set the model and hide the ID column
     ui.prjtable->setModel(model);
+    // model->removeColumns(4,8);
+
+    // 设置列宽
+    ui.prjtable->setColumnWidth(model->fieldIndex("time"), 100);
+    ui.prjtable->setColumnWidth(model->fieldIndex("no"), 500);
+    //ui.prjtable->setColumnWidth(model->fieldIndex("dev"), 200);
+    ui.prjtable->horizontalHeader()->setStretchLastSection(true);   // 最后一列填充剩余空间
 
     //ui.prjtable->setItemDelegate(new PrjDelegate(ui.prjtable));
     ui.prjtable->setColumnHidden(model->fieldIndex("id"), true);
@@ -84,15 +90,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui.prjtable->setSelectionMode(QAbstractItemView::SingleSelection);
     ui.prjtable->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui.prjtable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-    //ui.prjtable->horizontalHeader()->setStretchLastSection(true); //最后一个填充最后的空白位
-    //ui.prjtable->horizontalHeader()->
-    // Initialize the Author combo box
-    //ui.authorEdit->setModel(model->relationModel(authorIdx));
-    //ui.authorEdit->setModelColumn(model->relationModel(authorIdx)->fieldIndex("name"));
-
-    //ui.genreEdit->setModel(model->relationModel(genreIdx));
-    //ui.genreEdit->setModelColumn(model->relationModel(genreIdx)->fieldIndex("name"));
+    ui.prjtable->horizontalHeader()->setHighlightSections(false);
 
     ui.prjtable->setCurrentIndex(model->index(0, 0));
 }
