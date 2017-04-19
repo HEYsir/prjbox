@@ -16,7 +16,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void refresh_prj_list();
+    void refresh_prj_list(bool bListView);
     void revertModelAll();
     void addprj_clicked();
 

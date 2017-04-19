@@ -17,7 +17,7 @@ QSqlError initDb()
        return QSqlError();
 
     QSqlQuery q;
-    if (!q.exec(QLatin1String("create table prjinfo(id integer primary key, time varchar, no varchar, dev varchar, con varchar, code varchar, prj varchar, oa varchar,"
+    if (!q.exec(QLatin1String("create table prjinfo(id integer, time varchar, no varchar primary key, dev varchar, con varchar, code varchar, prj varchar, oa varchar,"
                               "refcode varchar, refprj varchar, inheritcode varchar, inheritprj varchar)")))
         return q.lastError();
 
@@ -100,8 +100,22 @@ MainWindow::~MainWindow()
 
 }
 
-void MainWindow::refresh_prj_list()
+void MainWindow::refresh_prj_list(bool bListView)
 {
+    if (bListView)
+    {
+        model->database().transaction(); //开始事务操作
+        if (model->submitAll())
+        {
+            model->database().commit(); //提交
+        } else
+        {
+            model->database().rollback(); //回滚
+            QMessageBox::warning(this, tr("tableModel"),
+                                 tr("数据库错误: %1")
+                                 .arg(model->lastError().text()));
+        }
+    }
     // Populate the model
     if (!model->select()) {
         showError(model->lastError());
@@ -130,21 +144,21 @@ void MainWindow::addprj_clicked()
 {
     PrjWindow *addprj = new PrjWindow(this);
     //addprj->setPrjWinTitle("新增项目开发记录");
-
+    addprj->bListView = false;
     addprj->show();
 
-    connect(addprj, SIGNAL(refreshPrjList()), this, SLOT(refresh_prj_list()));
+    connect(addprj, SIGNAL(refreshPrjList(bool)), this, SLOT(refresh_prj_list(bool)));
 }
 
 
 void MainWindow::on_prjtable_doubleClicked(const QModelIndex &index)
 {
     PrjWindow *prj = new PrjWindow(this);
-
+    prj->bListView = true;
     prj->setPrjWinTitle("定制项目详细信息");
     prj->showPrjInfo(index, model);
 
     connect(prj, SIGNAL(revertModel()), this, SLOT(revertModelAll()));
 
-    connect(prj, SIGNAL(refreshPrjList()), this, SLOT(refresh_prj_list()));
+    connect(prj, SIGNAL(refreshPrjList(bool)), this, SLOT(refresh_prj_list(bool)));
 }

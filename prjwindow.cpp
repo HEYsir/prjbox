@@ -116,29 +116,27 @@ void PrjWindow::on_prjsave_clicked()
     }
     else
     {
-        // 1 判断以定制单号为限定条件,判断同定制单号记录是否已经存在,存在则判断是否更新
-        QDateTime current_date_time = QDateTime::currentDateTime();
-        QString current_date = current_date_time.toString("yyyyMMdd");
+        if (!this->bListView)
+        {
+            // 1 判断以定制单号为限定条件,判断同定制单号记录是否已经存在,存在则判断是否更新
+            QDateTime current_date_time = QDateTime::currentDateTime();
+            QString current_date = current_date_time.toString("yyyyMMdd");
 
-        QString chNo = strNo.toStdString().c_str();
-        QString chDev = strDev.toStdString().c_str();
-        QString chCode = strCode.toStdString().c_str();
-        QString chCon = strCon.toStdString().c_str();
+            QString chOA = this->prjui.oa->text().toStdString().c_str();
+            QString chPrj = this->prjui.prj->text().toStdString().c_str();
+            QString chRefcode = this->prjui.refcode->text().toStdString().c_str();
+            QString chRefprj = this->prjui.refprj->text().toStdString().c_str();
+            QString chInheritCode = this->prjui.inheritcode->text().toStdString().c_str();
+            QString chInheritPrj = this->prjui.inheritprj->text().toStdString().c_str();
 
-        QString chOA = this->prjui.oa->text().toStdString().c_str();
-        QString chPrj = this->prjui.prj->text().toStdString().c_str();
-        QString chRefcode = this->prjui.refcode->text().toStdString().c_str();
-        QString chRefprj = this->prjui.refprj->text().toStdString().c_str();
-        QString chInheritCode = this->prjui.inheritcode->text().toStdString().c_str();
-        QString chInheritPrj = this->prjui.inheritprj->text().toStdString().c_str();
+            QSqlQuery q;
+            if (!q.prepare(QLatin1String("insert or ignore into prjinfo(time, no, dev, con, code, prj, oa, refcode, refprj, inheritcode, inheritprj) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")))
+                //return q.lastError();
+                return;
+            addPrj(q,  current_date, strNo, strDev, strCon, strCode,chPrj, chOA, chRefcode, chRefprj, chInheritCode, chInheritPrj);
+        }
 
-        QSqlQuery q;
-        if (!q.prepare(QLatin1String("insert into prjinfo(time, no, dev, con, code, prj, oa, refcode, refprj, inheritcode, inheritprj) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")))
-            //return q.lastError();
-            return;
-        addPrj(q,  current_date, chNo, chDev, chCon, chCode,chPrj, chOA, chRefcode, chRefprj, chInheritCode, chInheritPrj);
-
-        emit refreshPrjList(); // 告诉主窗口刷新项目列表
+        emit refreshPrjList(this->bListView); // 告诉主窗口刷新项目列表
 
         this->destroy();
     }

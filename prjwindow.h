@@ -12,13 +12,14 @@ class PrjWindow : public QDialog
     Q_OBJECT
 
 public:
+    bool bListView;
     PrjWindow(QWidget *parent = 0);
     void setPrjWinTitle(const QString &title);
     void showPrjInfo(const QModelIndex &index, QSqlRelationalTableModel *model);
     ~PrjWindow();
 
 signals:
-    void refreshPrjList();
+    void refreshPrjList(bool bListView);
     void revertModel();
 
 private slots:
