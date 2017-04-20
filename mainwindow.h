@@ -22,10 +22,13 @@ private slots:
 
     void on_prjtable_doubleClicked(const QModelIndex &index);
 
+    void on_searchCon_textChanged(const QString &filter);
+
 private:
     void showError(const QSqlError &err);
     QSqlRelationalTableModel *model;
     Ui::MainWindow ui;
+    void viewAllTable(void);
 };
 
 

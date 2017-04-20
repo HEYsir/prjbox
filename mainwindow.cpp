@@ -25,26 +25,8 @@ QSqlError initDb()
 
 }
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+void MainWindow::viewAllTable(void)
 {
-    ui.setupUi(this);
-
-    connect(ui.addprj, SIGNAL(clicked()), this, SLOT(addprj_clicked()));
-
-    if (!QSqlDatabase::drivers().contains("QSQLITE"))
-        QMessageBox::critical(this, "Unable to load database", "This demo needs the SQLITE driver");
-
-    // initialize the database
-    QSqlError err = initDb();
-    if (err.type() != QSqlError::NoError) {
-        showError(err);
-        return;
-    }
-
-    // Create the data model
-    model = new QSqlRelationalTableModel(ui.prjtable);
-    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model->setTable("prjinfo");
 
     // Remember the indexes of the columns
@@ -93,6 +75,31 @@ MainWindow::MainWindow(QWidget *parent)
     ui.prjtable->horizontalHeader()->setHighlightSections(false);
 
     ui.prjtable->setCurrentIndex(model->index(0, 0));
+
+}
+
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+{
+    ui.setupUi(this);
+
+    connect(ui.addprj, SIGNAL(clicked()), this, SLOT(addprj_clicked()));
+
+    if (!QSqlDatabase::drivers().contains("QSQLITE"))
+        QMessageBox::critical(this, "Unable to load database", "This demo needs the SQLITE driver");
+
+    // initialize the database
+    QSqlError err = initDb();
+    if (err.type() != QSqlError::NoError) {
+        showError(err);
+        return;
+    }
+
+    // Create the data model
+    model = new QSqlRelationalTableModel(ui.prjtable);
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+
+    this->viewAllTable();
 }
 
 MainWindow::~MainWindow()
@@ -162,3 +169,41 @@ void MainWindow::on_prjtable_doubleClicked(const QModelIndex &index)
 
     connect(prj, SIGNAL(refreshPrjList(bool)), this, SLOT(refresh_prj_list(bool)));
 }
+
+void MainWindow::on_searchCon_textChanged(const QString &filter)
+{
+    QString sqlkey;
+    QString searchKey = ui.searchItem->currentText();
+    QString searchCon = ui.searchCon->text();
+
+    if (searchKey == tr("主题")) {
+        sqlkey = tr("no");
+    } else if (searchKey == tr("开发时间")) {
+        sqlkey = tr("time");
+    } else if (searchKey == tr("单号")) {
+        sqlkey = tr("no");
+    } else if (searchKey == tr("型号/平台")) {
+        sqlkey = tr("dev");
+    } else{
+        ui.searchItem->setCurrentIndex(0);
+        sqlkey = tr("dev");
+    }
+
+    //模糊查询
+    if (!searchCon.isEmpty())
+    {
+        //模糊查询
+        //sqlite3_exec(pSQLiteSOEdb,"PRAGMA case_sensitive_like = 0;",0,0,0); //查询时不区分大小写
+        //SELECT * FROM tb WHERE fn like N string
+        //TEXT类型的,先转成UTF-8再入库,LIKE查询问题,完美解决.
+
+        QString subFilter = QString().sprintf("%s like '%%%s%%'", sqlkey.toUtf8().data(), filter.toUtf8().data());
+        model->setFilter(subFilter); //进行筛选
+        model->select(); //显示结果
+    }
+    else
+    {
+        this->viewAllTable();
+    }
+}
+
