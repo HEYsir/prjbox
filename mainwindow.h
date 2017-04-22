@@ -6,6 +6,7 @@
 #include <QtSql>
 
 #include "ui_mainwindow.h"
+#include "exsqlrelationaltablemodel.h"
 
 class MainWindow : public QMainWindow
 {
@@ -26,7 +27,7 @@ private slots:
 
 private:
     void showError(const QSqlError &err);
-    QSqlRelationalTableModel *model;
+    ExSqlRelationalTableModel *model;
     Ui::MainWindow ui;
     void viewAllTable(void);
 };

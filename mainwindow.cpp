@@ -59,6 +59,7 @@ void MainWindow::viewAllTable(void)
     ui.prjtable->horizontalHeader()->setStretchLastSection(true);   // 最后一列填充剩余空间
 
     //ui.prjtable->setItemDelegate(new PrjDelegate(ui.prjtable));
+
     ui.prjtable->setColumnHidden(model->fieldIndex("id"), true);
     ui.prjtable->setColumnHidden(model->fieldIndex("con"), true);
     ui.prjtable->setColumnHidden(model->fieldIndex("code"), true);
@@ -71,7 +72,7 @@ void MainWindow::viewAllTable(void)
 
     ui.prjtable->setSelectionMode(QAbstractItemView::SingleSelection);
     ui.prjtable->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui.prjtable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    //ui.prjtable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui.prjtable->horizontalHeader()->setHighlightSections(false);
 
     ui.prjtable->setCurrentIndex(model->index(0, 0));
@@ -96,7 +97,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     // Create the data model
-    model = new QSqlRelationalTableModel(ui.prjtable);
+    model = new ExSqlRelationalTableModel(ui.prjtable);
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
 
     this->viewAllTable();
