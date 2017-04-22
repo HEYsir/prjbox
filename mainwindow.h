@@ -4,6 +4,7 @@
 #include <QtWidgets>
 #include <QMainWindow>
 #include <QtSql>
+#include <QKeyEvent>
 
 #include "ui_mainwindow.h"
 #include "exsqlrelationaltablemodel.h"
@@ -16,19 +17,32 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    bool ListChange;
+
 private slots:
     void refresh_prj_list(bool bListView);
     void revertModelAll();
     void addprj_clicked();
+    void deal_editTime(QAction *);
 
     void on_prjtable_doubleClicked(const QModelIndex &index);
 
     void on_searchCon_textChanged(const QString &filter);
 
+    void on_prjtable_customContextMenuRequested(const QPoint &pos);
+
+protected slots:
+    void keyPressEvent(QKeyEvent *k);
+
+    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,
+                                 const QVector<int> &roles = QVector<int> ());
+
 private:
     void showError(const QSqlError &err);
     ExSqlRelationalTableModel *model;
     Ui::MainWindow ui;
+    QMenu *popMenu;
+    QModelIndex index4TimeEdit;
     void viewAllTable(void);
 };
 

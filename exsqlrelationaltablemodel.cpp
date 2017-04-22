@@ -14,10 +14,10 @@ ExSqlRelationalTableModel::ExSqlRelationalTableModel(QObject *parent)
 
 Qt::ItemFlags ExSqlRelationalTableModel::flags(const QModelIndex &index) const
 {
-    Qt::ItemFlags flags = QSqlQueryModel::flags(index);
+    Qt::ItemFlags flags = QSqlTableModel::flags(index);
 
     if (index.column() == 1)
-        flags |= Qt::ItemIsEditable;
+       flags |= Qt::ItemIsEditable;
 
     return flags;
 }

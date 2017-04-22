@@ -134,6 +134,8 @@ void PrjWindow::on_prjsave_clicked()
                 //return q.lastError();
                 return;
             addPrj(q,  current_date, strNo, strDev, strCon, strCode,chPrj, chOA, chRefcode, chRefprj, chInheritCode, chInheritPrj);
+
+            q.finish();
         }
 
         emit refreshPrjList(this->bListView); // 告诉主窗口刷新项目列表
