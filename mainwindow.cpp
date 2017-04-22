@@ -199,8 +199,8 @@ void MainWindow::on_searchCon_textChanged(const QString &filter)
         sqlkey = tr("no");
     } else if (searchKey == tr("开发时间")) {
         sqlkey = tr("time");
-    } else if (searchKey == tr("单号")) {
-        sqlkey = tr("no");
+    } else if (searchKey == tr("需求")) {
+        sqlkey = tr("con");
     } else if (searchKey == tr("型号/平台")) {
         sqlkey = tr("dev");
     } else{
