@@ -41,3 +41,5 @@ DISTFILES +=
 
 RESOURCES += \
     projectbox.qrc
+
+RC_FILE += version.rc
