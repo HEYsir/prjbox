@@ -26,12 +26,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp \
     prjwindow.cpp \
     mainwindow.cpp \
-    prjdelegate.cpp
+    prjdelegate.cpp \
+    exsqlrelationaltablemodel.cpp
 
 HEADERS  += \
     prjwindow.h \
     mainwindow.h \
-    prjdelegate.h
+    prjdelegate.h \
+    exsqlrelationaltablemodel.h
 
 FORMS += \
     mainwindow.ui \

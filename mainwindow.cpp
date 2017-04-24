@@ -21,6 +21,8 @@ QSqlError initDb()
                               "refcode varchar, refprj varchar, inheritcode varchar, inheritprj varchar)")))
         return q.lastError();
 
+    q.finish();
+
     return QSqlError();
 
 }
@@ -59,6 +61,7 @@ void MainWindow::viewAllTable(void)
     ui.prjtable->horizontalHeader()->setStretchLastSection(true);   // 最后一列填充剩余空间
 
     //ui.prjtable->setItemDelegate(new PrjDelegate(ui.prjtable));
+
     ui.prjtable->setColumnHidden(model->fieldIndex("id"), true);
     ui.prjtable->setColumnHidden(model->fieldIndex("con"), true);
     ui.prjtable->setColumnHidden(model->fieldIndex("code"), true);
@@ -96,10 +99,24 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     // Create the data model
-    model = new QSqlRelationalTableModel(ui.prjtable);
+    model = new ExSqlRelationalTableModel(ui.prjtable);
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
 
     this->viewAllTable();
+
+    //比较重要 只有这样设置 才能使用信号SIGNAL(customContextMenuRequested(QPoint))
+    ui.prjtable->setContextMenuPolicy(Qt::CustomContextMenu);
+    // Create menu （注意menu设为tableview的子控件）
+    QAction *action_editTime = new QAction(this);
+    action_editTime->setText(QStringLiteral("修改开发时间(F2)"));
+    popMenu = new QMenu(ui.prjtable);
+    popMenu->addAction(action_editTime);
+    //右键处理事件
+    connect(popMenu, SIGNAL(triggered(QAction *)), this, SLOT(deal_editTime(QAction *)));
+
+    connect(model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)),
+            this, SLOT(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
+
 }
 
 MainWindow::~MainWindow()
@@ -114,7 +131,7 @@ void MainWindow::refresh_prj_list(bool bListView)
         model->database().transaction(); //开始事务操作
         if (model->submitAll())
         {
-            model->database().commit(); //提交
+            model->database().commit();  //提交,amazing,sqlite will return error,but facter is succuss.
         } else
         {
             model->database().rollback(); //回滚
@@ -168,6 +185,8 @@ void MainWindow::on_prjtable_doubleClicked(const QModelIndex &index)
     connect(prj, SIGNAL(revertModel()), this, SLOT(revertModelAll()));
 
     connect(prj, SIGNAL(refreshPrjList(bool)), this, SLOT(refresh_prj_list(bool)));
+
+    ListChange = false;
 }
 
 void MainWindow::on_searchCon_textChanged(const QString &filter)
@@ -180,8 +199,8 @@ void MainWindow::on_searchCon_textChanged(const QString &filter)
         sqlkey = tr("no");
     } else if (searchKey == tr("开发时间")) {
         sqlkey = tr("time");
-    } else if (searchKey == tr("单号")) {
-        sqlkey = tr("no");
+    } else if (searchKey == tr("需求")) {
+        sqlkey = tr("con");
     } else if (searchKey == tr("型号/平台")) {
         sqlkey = tr("dev");
     } else{
@@ -205,5 +224,52 @@ void MainWindow::on_searchCon_textChanged(const QString &filter)
     {
         this->viewAllTable();
     }
+}
+
+
+void MainWindow::on_prjtable_customContextMenuRequested(const QPoint &pos)
+{
+    QModelIndex index = ui.prjtable->indexAt(pos);
+
+    if (index.isValid())
+    {
+        // must before at popMenu->exec,ohterwith index will be the last time
+        index4TimeEdit =  ui.prjtable->model()->index(index.row(), 1, QModelIndex());
+
+        popMenu->exec(QCursor::pos()); // 菜单出现的位置为当前鼠标的位置
+    }
+}
+
+void MainWindow::deal_editTime(QAction *action)
+{
+    if (action->text() != QStringLiteral("修改开发时间(F2)"))
+        return;
+
+    ui.prjtable->edit(index4TimeEdit);
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *k)
+{
+    if (ui.prjtable->hasFocus())
+    {
+        if (k->key() == Qt::Key_F2)
+        {
+            QModelIndex index = ui.prjtable->currentIndex();
+            if (index.isValid())
+            {
+                // must before at popMenu->exec,ohterwith index will be the last time
+                index4TimeEdit =  ui.prjtable->model()->index(index.row(), 1, QModelIndex());
+                ListChange = true;
+                emit popMenu->triggered(popMenu->actions().at(0));
+            }
+        }
+    }
+}
+
+void MainWindow::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,
+                             const QVector<int> &roles)
+{
+    if (ListChange)
+        refresh_prj_list(true);
 }
 
