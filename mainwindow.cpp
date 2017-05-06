@@ -2,12 +2,27 @@
 #include "prjwindow.h"
 #include "prjdelegate.h"
 #include <QtSql>
-
+#include <QtDebug>
 QSqlError initDb()
 {
     QString dbFileName = "localprj.db";
+    QString userEnvironment = "USERPROFILE=";
+    QString dbPath;
+    QStringList environment = QProcess::systemEnvironment();
+    QString str;
+    foreach(str, environment)
+    {
+        if (str.startsWith(userEnvironment))
+        {
+            str.remove(0, userEnvironment.length());
+            dbPath.append(str+"\\");
+            break;
+        }
+    }
+    dbPath.append(dbFileName);
+
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(dbFileName);
+    db.setDatabaseName(dbPath);
 
     if (!db.open())
         return db.lastError();
