@@ -32,10 +32,33 @@ QSqlError initDb()
     QStringList tables = db.tables();
     QSqlQuery q;
 
-    if (!tables.contains("prjinfo", Qt::CaseInsensitive))
+    if (tables.contains("prjinfo", Qt::CaseInsensitive))
+    {
+        //prjinfo表增加三个字段version和platform和deadline，需兼容处理
+        // 判断表中是否有字段version和platform和deadline
+        q.exec(QLatin1String("select * from sqlite_master where name='prjinfo' and sql like '%platform%'"));
+        if (!q.next())  // 无platform字段
+        {
+             if (!q.exec(QLatin1String("alter TABLE prjinfo add platform integer")))
+                 return q.lastError();
+        }
+        q.exec(QLatin1String("select * from sqlite_master where name='prjinfo' and sql like '%version%'"));
+        if (!q.next())  // 无 version 字段
+        {
+             if (!q.exec(QLatin1String("alter TABLE prjinfo add version integer")))
+                 return q.lastError();
+        }
+        q.exec(QLatin1String("select * from sqlite_master where name='prjinfo' and sql like '%deadline%'"));
+        if (!q.next())  // 无 deadline 字段
+        {
+             if (!q.exec(QLatin1String("alter TABLE prjinfo add deadline varchar")))
+                 return q.lastError();
+        }
+    }
+    else
     {
         if (!q.exec(QLatin1String("create table prjinfo(id integer, time varchar, no varchar primary key, dev varchar, con varchar, code varchar, prj varchar, oa varchar,"
-                                  "refcode varchar, refprj varchar, inheritcode varchar, inheritprj varchar)")))
+                                  "refcode varchar, refprj varchar, inheritcode varchar, inheritprj varchar, platform varchar, version varchar, deadline varchar)")))
             return q.lastError();
     }
 
@@ -55,18 +78,20 @@ void MainWindow::viewAllTable(void)
 {
     model->setTable("prjinfo");
 
-    // Remember the indexes of the columns
-    //authorIdx = model->fieldIndex("author");
-    //genreIdx = model->fieldIndex("genre");
-
+    //Remember the indexes of the columns
+    versionIdx = model->fieldIndex("version");
+    platformIdx = model->fieldIndex("platform");
     // Set the relations to the other database tables
-    //model->setRelation(authorIdx, QSqlRelation("authors", "id", "name"));
-    //model->setRelation(genreIdx, QSqlRelation("genres", "id", "name"));
+    //model->setRelation(versionIdx, QSqlRelation("cplinfo", "id", "version"));
+    //model->setRelation(platformIdx, QSqlRelation("cplinfo", "id", "platform"));
 
     // Set the localized header captions
     model->setHeaderData(model->fieldIndex("no"), Qt::Horizontal, tr("定制单号与主题"));
     model->setHeaderData(model->fieldIndex("dev"), Qt::Horizontal, tr("设备型号"));
     model->setHeaderData(model->fieldIndex("time"), Qt::Horizontal, tr("开发时间"));
+    model->setHeaderData(platformIdx, Qt::Horizontal, tr("平台类型"));
+    model->setHeaderData(versionIdx, Qt::Horizontal, tr("软件版本"));
+    model->setHeaderData(model->fieldIndex("deadline"), Qt::Horizontal, tr("B1(结项)时间"));
 
     // Populate the model
     if (!model->select()) {
@@ -81,7 +106,7 @@ void MainWindow::viewAllTable(void)
     // 设置列宽
     ui.prjtable->setColumnWidth(model->fieldIndex("time"), 100);
     ui.prjtable->setColumnWidth(model->fieldIndex("no"), 500);
-    //ui.prjtable->setColumnWidth(model->fieldIndex("dev"), 200);
+    ui.prjtable->setColumnWidth(versionIdx, 80);
     ui.prjtable->horizontalHeader()->setStretchLastSection(true);   // 最后一列填充剩余空间
 
     //ui.prjtable->setItemDelegate(new PrjDelegate(ui.prjtable));

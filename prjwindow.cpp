@@ -2,7 +2,7 @@
 #include "mainwindow.h"
 
 void addPrj(QSqlQuery &q, const QString &time, const QString &no,  const QString &dev, const QString &con, const QString &code, const QString &prj, const QString &oa,
-                const QString &refcode, const QString &refprj, const QString &inheritcode, const QString &inheritprj)
+                const QString &refcode, const QString &refprj, const QString &inheritcode, const QString &inheritprj, const QString &platform, const QString &version, const QString &deadline)
 {
     q.addBindValue(time);
     q.addBindValue(no);
@@ -15,6 +15,10 @@ void addPrj(QSqlQuery &q, const QString &time, const QString &no,  const QString
     q.addBindValue(refprj);
     q.addBindValue(inheritcode);
     q.addBindValue(inheritprj);
+    q.addBindValue(platform);
+    q.addBindValue(version);
+    q.addBindValue(deadline);
+
     q.exec();
 }
 
@@ -52,6 +56,9 @@ void PrjWindow::showPrjInfo(const QModelIndex &index, QSqlRelationalTableModel *
     mapper->addMapping(this->prjui.refprj, model->fieldIndex("refprj"));
     mapper->addMapping(this->prjui.inheritcode, model->fieldIndex("inheritcode"));
     mapper->addMapping(this->prjui.inheritprj,  model->fieldIndex("inheritprj"));
+    mapper->addMapping(this->prjui.platform, model->fieldIndex("platform"));
+    mapper->addMapping(this->prjui.version, model->fieldIndex("version"));
+    mapper->addMapping(this->prjui.deadline,  model->fieldIndex("deadline"));
 
     mapper->setCurrentModelIndex(index);
 
@@ -122,24 +129,28 @@ void PrjWindow::on_prjsave_clicked()
             QDateTime current_date_time = QDateTime::currentDateTime();
             QString current_date = current_date_time.toString("yyyyMMdd");
 
-            QString chOA = this->prjui.oa->text().toStdString().c_str();
-            QString chPrj = this->prjui.prj->text().toStdString().c_str();
-            QString chRefcode = this->prjui.refcode->text().toStdString().c_str();
-            QString chRefprj = this->prjui.refprj->text().toStdString().c_str();
-            QString chInheritCode = this->prjui.inheritcode->text().toStdString().c_str();
-            QString chInheritPrj = this->prjui.inheritprj->text().toStdString().c_str();
+            QString chOA = this->prjui.oa->text();
+            QString chPrj = this->prjui.prj->text();
+            QString chRefcode = this->prjui.refcode->text();
+            QString chRefprj = this->prjui.refprj->text();
+            QString chInheritCode = this->prjui.inheritcode->text();
+            QString chInheritPrj = this->prjui.inheritprj->text();
+            QString strVersion = this->prjui.version->text();
+            QString strDeadline = this->prjui.deadline->text();
+
+            QString strPlatform = this->prjui.platform->text();
 
             QSqlQuery q;
-            if (!q.prepare(QLatin1String("insert or ignore into prjinfo(time, no, dev, con, code, prj, oa, refcode, refprj, inheritcode, inheritprj) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")))
+            if (!q.prepare(QLatin1String("insert or ignore into prjinfo(time, no, dev, con, code, prj, oa, refcode, refprj, inheritcode, inheritprj, platform, version, deadline) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")))
                 //return q.lastError();
                 return;
-            addPrj(q,  current_date, strNo, strDev, strCon, strCode,chPrj, chOA, chRefcode, chRefprj, chInheritCode, chInheritPrj);
+
+            addPrj(q,  current_date, strNo, strDev, strCon, strCode,chPrj, chOA, chRefcode, chRefprj, chInheritCode, chInheritPrj, strPlatform, strVersion, strDeadline);
 
             q.finish();
         }
 
         emit refreshPrjList(this->bListView); // 告诉主窗口刷新项目列表
-
         this->destroy();
     }
 }
