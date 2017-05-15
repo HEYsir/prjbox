@@ -6,10 +6,12 @@
 QSqlError initDb()
 {
     QString dbFileName = "localprj.db";
+
     QString userEnvironment = "USERPROFILE=";
     QString dbPath;
     QStringList environment = QProcess::systemEnvironment();
     QString str;
+
     foreach(str, environment)
     {
         if (str.startsWith(userEnvironment))
@@ -28,13 +30,20 @@ QSqlError initDb()
         return db.lastError();
 
     QStringList tables = db.tables();
-    if (tables.contains("prjinfo", Qt::CaseInsensitive))
-       return QSqlError();
-
     QSqlQuery q;
-    if (!q.exec(QLatin1String("create table prjinfo(id integer, time varchar, no varchar primary key, dev varchar, con varchar, code varchar, prj varchar, oa varchar,"
-                              "refcode varchar, refprj varchar, inheritcode varchar, inheritprj varchar)")))
-        return q.lastError();
+
+    if (!tables.contains("prjinfo", Qt::CaseInsensitive))
+    {
+        if (!q.exec(QLatin1String("create table prjinfo(id integer, time varchar, no varchar primary key, dev varchar, con varchar, code varchar, prj varchar, oa varchar,"
+                                  "refcode varchar, refprj varchar, inheritcode varchar, inheritprj varchar)")))
+            return q.lastError();
+    }
+
+    if (!tables.contains("cplinfo", Qt::CaseInsensitive))
+    {
+        if (!q.exec(QLatin1String("create table cplinfo(id integer primary key, version varchar, platform varchar, cpl varchar, package varchar, other varchar)")))
+            return q.lastError();
+    }
 
     q.finish();
 

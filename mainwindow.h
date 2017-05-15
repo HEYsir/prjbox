@@ -38,6 +38,8 @@ protected slots:
                                  const QVector<int> &roles = QVector<int> ());
 
 private:
+    int versionIdx;
+    int platformIdx;
     void showError(const QSqlError &err);
     ExSqlRelationalTableModel *model;
     Ui::MainWindow ui;
