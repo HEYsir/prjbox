@@ -31,22 +31,29 @@ QVariant ExSqlRelationalTableModel::data(const QModelIndex &index, int role) con
 {
     QVariant ret;
 
+
     if (!index.isValid())
         return QVariant();
 
     QSqlRelationalTableModel *tmp = (QSqlRelationalTableModel *)index.model();
+    QModelIndex itemIndex = tmp->index(index.row(), tmp->fieldIndex("finprj"), QModelIndex());
     if (Qt::BackgroundColorRole == role)
     {
+
+        if (!itemIndex.data().toString().isEmpty())
+        {
+            return QSqlRelationalTableModel::data(index, role);
+        }
+
         if (tmp->fieldIndex("deadline") == index.column())
         {
             QString timestring = index.data(Qt::DisplayRole).toString();
             if (timestring.isEmpty())
             {
-                return QSqlRelationalTableModel::data(index, role);
+                return QColor(Qt::magenta);
             }
             QDate time = QDate::fromString(timestring, "yyyyMMdd");
             QDate Curtime =QDate::currentDate();
-
             if (Curtime > time)
             {
                 return QColor(Qt::red);
@@ -57,7 +64,7 @@ QVariant ExSqlRelationalTableModel::data(const QModelIndex &index, int role) con
             }
             else
             {
-                return QSqlRelationalTableModel::data(index, role);
+                return QColor(Qt::green);
             }
         }
         else

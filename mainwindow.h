@@ -23,7 +23,7 @@ private slots:
     void refresh_prj_list(bool bListView);
     void revertModelAll();
     void addprj_clicked();
-    void deal_editTime(QAction *);
+    void deal_popMenuAction(QAction *);
 
     void on_prjtable_doubleClicked(const QModelIndex &index);
 

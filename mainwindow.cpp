@@ -54,11 +54,18 @@ QSqlError initDb()
              if (!q.exec(QLatin1String("alter TABLE prjinfo add deadline varchar")))
                  return q.lastError();
         }
+
+        q.exec(QLatin1String("select * from sqlite_master where name='prjinfo' and sql like '%finprj%'"));
+        if (!q.next())  // 无 finprj 字段
+        {
+             if (!q.exec(QLatin1String("alter TABLE prjinfo add finprj varchar")))
+                 return q.lastError();
+        }
     }
     else
     {
         if (!q.exec(QLatin1String("create table prjinfo(id integer, time varchar, no varchar primary key, dev varchar, con varchar, code varchar, prj varchar, oa varchar,"
-                                  "refcode varchar, refprj varchar, inheritcode varchar, inheritprj varchar, platform varchar, version varchar, deadline varchar)")))
+                                  "refcode varchar, refprj varchar, inheritcode varchar, inheritprj varchar, platform varchar, version varchar, deadline varchar, finprj varchar)")))
             return q.lastError();
     }
 
@@ -121,6 +128,7 @@ void MainWindow::viewAllTable(void)
     ui.prjtable->setColumnHidden(model->fieldIndex("refprj"), true);
     ui.prjtable->setColumnHidden(model->fieldIndex("inheritcode"), true);
     ui.prjtable->setColumnHidden(model->fieldIndex("inheritprj"), true);
+    ui.prjtable->setColumnHidden(model->fieldIndex("finprj"), true);
 
     ui.prjtable->setSelectionMode(QAbstractItemView::SingleSelection);
     ui.prjtable->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -159,10 +167,15 @@ MainWindow::MainWindow(QWidget *parent)
     // Create menu （注意menu设为tableview的子控件）
     QAction *action_editTime = new QAction(this);
     action_editTime->setText(QStringLiteral("修改开发时间(F2)"));
+
+    QAction *action_finPrj = new QAction(this);
+    action_finPrj->setText(QStringLiteral("设置已结项"));
+
     popMenu = new QMenu(ui.prjtable);
     popMenu->addAction(action_editTime);
+    popMenu->addAction(action_finPrj);
     //右键处理事件
-    connect(popMenu, SIGNAL(triggered(QAction *)), this, SLOT(deal_editTime(QAction *)));
+    connect(popMenu, SIGNAL(triggered(QAction *)), this, SLOT(deal_popMenuAction(QAction *)));
 
     connect(model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)),
             this, SLOT(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
@@ -284,18 +297,37 @@ void MainWindow::on_prjtable_customContextMenuRequested(const QPoint &pos)
     if (index.isValid())
     {
         // must before at popMenu->exec,ohterwith index will be the last time
-        index4TimeEdit =  ui.prjtable->model()->index(index.row(), 1, QModelIndex());
+        index4TimeEdit = index;
 
         popMenu->exec(QCursor::pos()); // 菜单出现的位置为当前鼠标的位置
     }
 }
 
-void MainWindow::deal_editTime(QAction *action)
+void MainWindow::deal_popMenuAction(QAction *action)
 {
-    if (action->text() != QStringLiteral("修改开发时间(F2)"))
-        return;
+    QModelIndex itemIndex;
+    int columIndex = -1;
+    ExSqlRelationalTableModel *tmp = (ExSqlRelationalTableModel *)index4TimeEdit.model();
 
-    ui.prjtable->edit(index4TimeEdit);
+    if (action->text() == QStringLiteral("修改开发时间(F2)"))
+    {
+        columIndex = tmp->fieldIndex("time");
+        itemIndex = tmp->index(index4TimeEdit.row(), columIndex, QModelIndex());
+        ui.prjtable->edit(itemIndex);
+        ListChange = true;
+    }
+    if (action->text() == QStringLiteral("设置已结项"))
+    {
+        columIndex = tmp->fieldIndex("finprj");
+        itemIndex = tmp->index(index4TimeEdit.row(), columIndex, QModelIndex());
+        if (itemIndex.data().toString().isEmpty())
+        {
+            QDateTime current_date_time = QDateTime::currentDateTime();
+            QString current_date = current_date_time.toString("yyyyMMdd");
+            ui.prjtable->model()->setData(itemIndex, current_date);
+            ListChange = true;
+        }
+    }
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *k)
