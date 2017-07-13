@@ -106,6 +106,7 @@ void MainWindow::viewAllTable(void)
     // 设置列宽
     ui.prjtable->setColumnWidth(model->fieldIndex("time"), 100);
     ui.prjtable->setColumnWidth(model->fieldIndex("no"), 500);
+    ui.prjtable->setColumnWidth(platformIdx, 80);
     ui.prjtable->setColumnWidth(versionIdx, 80);
     ui.prjtable->horizontalHeader()->setStretchLastSection(true);   // 最后一列填充剩余空间
 
