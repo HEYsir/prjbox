@@ -250,12 +250,12 @@
            <enum>Qt::RightToLeft</enum>
           </property>
           <property name="text">
-           <string>编译说明：</string>
+           <string>打包说明：</string>
           </property>
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QPlainTextEdit" name="complier_2">
+         <widget class="QPlainTextEdit" name="pack">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>

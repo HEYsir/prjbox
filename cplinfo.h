@@ -2,21 +2,35 @@
 #define CPLINFO_H
 
 #include <QWidget>
+#include <QCloseEvent>
+#include <QDialog>
+#include "ui_cplinfo.h"
+#include <QVariant>
+#include <QtSql>
 
 namespace Ui {
 class cplinfo;
 }
 
-class cplinfo : public QWidget
+class CplInfo : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit cplinfo(QWidget *parent = 0);
-    ~cplinfo();
+    explicit CplInfo(QWidget *parent = 0);
+    ~CplInfo();
+
+private slots:
+    void on_cplsave_clicked();
+
+signals:
+    void revertModel();
+
+protected:
+    void closeEvent(QCloseEvent *event);
 
 private:
-    Ui::cplinfo *ui;
+    Ui::cplinfo cplui;
 };
 
 #endif // CPLINFO_H

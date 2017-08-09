@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "prjwindow.h"
 #include "prjdelegate.h"
+#include "cplinfo.h"
 #include <QtSql>
 #include <QtDebug>
 QSqlError initDb()
@@ -355,3 +356,9 @@ void MainWindow::dataChanged(const QModelIndex &topLeft, const QModelIndex &bott
         refresh_prj_list(true);
 }
 
+
+void MainWindow::on_addcomplier_clicked()
+{
+    CplInfo *addcpl = new CplInfo(this);
+    addcpl->show();
+}

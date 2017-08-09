@@ -31,6 +31,8 @@ private slots:
 
     void on_prjtable_customContextMenuRequested(const QPoint &pos);
 
+    void on_addcomplier_clicked();
+
 protected slots:
     void keyPressEvent(QKeyEvent *k);
 
