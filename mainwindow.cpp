@@ -71,7 +71,7 @@ QSqlError initDb()
 
     if (!tables.contains("cplinfo", Qt::CaseInsensitive))
     {
-        if (!q.exec(QLatin1String("create table cplinfo(id integer primary key, version varchar, platform varchar, cpl varchar, package varchar, other varchar)")))
+        if (!q.exec(QLatin1String("create table cplinfo(id integer primary key, version varchar, platform varchar, cpl varchar, package varchar, other varchar, dev varchar)")))
             return q.lastError();
     }
 

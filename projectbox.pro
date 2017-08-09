@@ -27,17 +27,20 @@ SOURCES += main.cpp \
     prjwindow.cpp \
     mainwindow.cpp \
     prjdelegate.cpp \
-    exsqlrelationaltablemodel.cpp
+    exsqlrelationaltablemodel.cpp \
+    cplinfo.cpp
 
 HEADERS  += \
     prjwindow.h \
     mainwindow.h \
     prjdelegate.h \
-    exsqlrelationaltablemodel.h
+    exsqlrelationaltablemodel.h \
+    cplinfo.h
 
 FORMS += \
     mainwindow.ui \
-    prjwindow.ui
+    prjwindow.ui \
+    cplinfo.ui
 
 DISTFILES +=
 
